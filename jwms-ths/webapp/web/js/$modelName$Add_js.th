@@ -1,0 +1,45 @@
+$(function () {
+    $("#formAdd[[${table.humpName}]] input[validate-expression],#formAdd[[${table.humpName}]] select[validate-expression]").bind("blur", function (e) {
+        $(this).validate();
+    });
+});
+
+$("#add[[${table.humpName}]]Btn").bind('click', function () {
+    $(this).button('loading');
+    $("#formAdd[[${table.humpName}]]").validate({
+        success: function () {
+            $.ajax({
+                url: getJcloudAppBaseUrl("") + "[[${table.tableName}]]/inst",
+                dataType: "json",
+                data: $("#formAdd[[${table.humpName}]]").formData(),
+                success: function (result) {
+                    $("#add[[${table.humpName}]]Btn").button("reset");
+                    if (!result) {
+                        alert("保存失败!");
+                        return;
+                    }
+                    if (result.code == 1) {
+                        alert("保存成功!", function () {
+                            var popWindow = $("#formAdd[[${table.humpName}]]").findPopWindow();
+                            if (popWindow) {
+                                popWindow.close(result.content);
+                            }
+                            [[${table.humpLowerName}]]_grid.ajax.reload();
+                        });
+                    } else {
+                        if (result.message) {
+                            alert(result.message);
+                        } else {
+                            alert("保存异常!");
+                        }
+                    }
+                },
+                error: function (request, data, e) {
+                    $("#add[[${table.humpName}]]Btn").button("reset");
+                    alert(data + ":" + request.responseText);
+                }
+
+            });
+        }
+    });
+});

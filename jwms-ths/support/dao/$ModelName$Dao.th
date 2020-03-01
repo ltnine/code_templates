@@ -1,0 +1,22 @@
+package [[${basePackageName}]].dao;
+
+import [[${basePackageName}]].entity.[[${table.humpName}]];
+import [[${basePackageName}]].query.[[${table.humpName}]]Query;
+import com.jd.base.common.dao.BaseDao;
+import com.jd.jcloud.wms.domain.common.Page;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+public interface [[${table.humpName}]]Dao extends BaseDao {
+
+    int insert([[${table.humpName}]] [[${table.humpLowerName}]]);
+
+    int delByID(@Param("id") Long id, @Param("tenantId") String tenantId);
+
+    int update([[${table.humpName}]] [[${table.humpLowerName}]]);
+
+    [[${table.humpName}]] getByID(@Param("id") Long id, @Param("tenantId") String tenantId);
+
+    List<[[${table.humpName}]]> findPage(@Param("page") Page pageInfo, @Param("cond") [[${table.humpName}]]Query condition);
+}

@@ -1,0 +1,107 @@
+var [[${table.humpLowerName}]]_grid;
+var [[${table.humpLowerName}]]_addWindow;
+var [[${table.humpLowerName}]]_editWindow;
+var [[${table.humpLowerName}]]Tab;
+
+$(document).ready(function () {
+    [[${table.humpLowerName}]]Tab = $("#formQuery[[${table.humpName}]]Tab").tabs({
+        more: false
+    });
+
+    var tabPage = $("#formQuery[[${table.humpName}]]Tab").findTabPage();
+    if (tabPage) {
+        tabPage.closed(function () {
+            [[${table.humpLowerName}]]Tab.destroy();
+            [[${table.humpLowerName}]]Tab = null;
+        });
+    }
+    [[${table.humpLowerName}]]Tab.add({
+        title: "[[${table.tableComment}]]",
+        elements: {
+            selector: [[${table.humpLowerName}]]Tab.next()
+        },
+        closable: false
+    });
+
+    //初始化表格数据
+    [[${table.humpLowerName}]]_grid = $("#[[${table.humpLowerName}]]Table").dataTableTemplate({
+        paging: true,
+        searching: false,
+        processing: true,
+        lengthChange: true,
+        pageSize: 10,
+        serverSide: true,
+        bAutoWidth: false,
+        scrollX: true,
+        ordering: true,
+        pageNavCount: 4,
+        ajax: {
+            url: getJcloudAppBaseUrl("") + "[[${table.tableName}]]/query",
+            data: function (param) {
+                return $("#formQuery[[${table.humpName}]]").formData(param);
+            }
+        }
+    });
+
+    $("#query[[${table.humpName}]]").on('click', (function () {
+        [[${table.humpLowerName}]]_grid.ajax.reload();
+    }));
+
+    $("#add[[${table.humpName}]]").on('click', (function () {
+        [[${table.humpLowerName}]]_addWindow = $("body").pop({
+                title: "新建[[${table.tableComment}]]",
+                url: getJcloudAppBaseUrl("master") + "[[${table.tableName}]]/add",
+                width: 600,
+                moveAble: true,
+                scroll: true
+            }
+        );
+    }));
+});
+
+function openEdit[[${table.humpName}]]Page(id) {
+    [[${table.humpLowerName}]]_editWindow = $("body").pop({
+        title: "编辑[[${table.tableComment}]]",
+        url: getJcloudAppBaseUrl("master") + "[[${table.tableName}]]/edit?id=" + id,
+        width: 600,
+        moveAble: true,
+        scroll: true
+    });
+}
+
+function delete[[${table.humpName}]](id) {
+    confirm("确认要删除该数据吗？", "删除数据", function () {
+        $.ajax({
+            type: "post",
+            url: getJcloudAppBaseUrl("") + "[[${table.tableName}]]/del",
+            dataType: "json",
+            data: {id: id},
+            success: function (result) {
+                if (!result) {
+                    alert("删除失败!");
+                    return;
+                }
+                if(result.code == "1"){
+                    alert("删除成功!", function () {
+                        var popWindow = $("#formQuery[[${table.humpName}]]").findPopWindow();
+                        if (popWindow) {
+                            popWindow.close(result);
+                        }
+                        [[${table.humpLowerName}]]_grid.ajax.reload();
+                    });
+                }else {
+                    if (result.message) {
+                        alert(result.message);
+                    } else {
+                        alert("删除异常!");
+                    }
+                    return;
+                }
+            },
+            error: function (request, data, e) {
+                alert(data + ":" + request.responseText);
+            }
+        });
+    })
+}
+

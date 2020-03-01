@@ -1,0 +1,13 @@
+package [[${basePackageName}]].base;
+
+import com.jd.jcloud.wms.authority.domain.UserInfo;
+import com.jd.jcloud.wms.authority.util.BasicUtil;
+import com.jd.jcloud.wms.controller.BaseController;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class BaseBizController extends BaseController {
+    public UserInfo getUserInfo(HttpServletRequest request) {
+        return BasicUtil.getUserInfo(request);
+    }
+}

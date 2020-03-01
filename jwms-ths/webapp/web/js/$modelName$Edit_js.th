@@ -1,0 +1,58 @@
+$(function () {
+    $("#formEdit[[${table.humpName}]] select").each(function (index, elemtnt) {
+        var initValue = $(this).attr("value");
+        if (initValue) {
+            $(this).val(initValue);
+        }
+    });
+    $("#formEdit[[${table.humpName}]] input[validate-expression],#formEdit[[${table.humpName}]] select[validate-expression]").bind("blur", function (e) {
+        $(this).validate();
+    });
+});
+$(function () {
+    $("#formEdit[[${table.humpName}]] select").each(function (index, elemtnt) {
+        var initValue = $(this).attr("value");
+        if (initValue) {
+            $(this).val(initValue);
+        }
+    });
+});
+$("#edit[[${table.humpName}]]Btn").bind('click', function () {
+    $(this).button('loading');
+    $("#formEdit[[${table.humpName}]]").validate({
+        success: function () {
+            $.ajax({
+                url: getJcloudAppBaseUrl("master") + "[[${table.tableName}]]/upt",
+                dataType: "json",
+                data: $("#formEdit[[${table.humpName}]]").formData(),
+                success: function (result) {
+                    $("#edit[[${table.humpName}]]Btn").button("reset");
+                    if (!result) {
+                        alert("保存失败!");
+                        return;
+                    }
+                    if (result.code == "1") {
+                        alert("保存成功!", function () {
+                            var popWindow = $("#formEdit[[${table.humpName}]]").findPopWindow();
+                            if (popWindow) {
+                                popWindow.close(result);
+                            }
+                            [[${table.humpLowerName}]]_grid.ajax.reload();
+                        });
+                    } else {
+                        if (result.message) {
+                            alert(result.message);
+                        } else {
+                            alert("保存异常!");
+                        }
+
+                    }
+                },
+                error: function (request, data, e) {
+                    $("#edit[[${table.humpName}]]Btn").button("reset");
+                    alert(data + ":" + request.responseText);
+                }
+            });
+        }
+    });
+});

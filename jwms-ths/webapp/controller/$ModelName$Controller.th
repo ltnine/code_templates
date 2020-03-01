@@ -1,0 +1,145 @@
+package [[${basePackageName}]].controller;
+
+import com.jd.jcloud.wms.authority.domain.UserInfo;
+import [[${basePackageName}]].base.BaseBizController;
+import [[${basePackageName}]].entity.[[${table.humpName}]];
+import [[${basePackageName}]].query.[[${table.humpName}]]Query;
+import [[${basePackageName}]].service.[[${table.humpName}]]Service;
+import [[${basePackageName}]].vo.[[${table.humpName}]]AddVO;
+import [[${basePackageName}]].vo.[[${table.humpName}]]EditVO;
+import com.jd.jcloud.wms.domain.common.Page;
+import com.jd.jcloud.wms.domain.dto.Result;
+import com.jd.jcloud.wms.domain.dto.ResultUtil;
+import com.jd.jcloud.wms.domain.exception.BizException;
+import com.jd.jcloud.wms.domain.exception.BusinessException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+@Controller
+@RequestMapping("[[${table.tableName}]]")
+public class [[${table.humpName}]]Controller extends BaseBizController {
+
+    private static final Logger logger = LogManager.getLogger([[${table.humpName}]]Controller.class);
+
+    @Resource
+    [[${table.humpName}]]Service [[${table.humpLowerName}]]Service;
+
+    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST})
+    public String list[[${table.humpName}]](Model model, [[${table.humpName}]]Query query) {
+        return "[[${table.humpLowerName}]]List";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String add[[${table.humpName}]](HttpServletRequest request, Model model) {
+        return "[[${table.humpLowerName}]]Add";
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String edit[[${table.humpName}]](HttpServletRequest request, Model model, Long id) {
+        if (id != null) {
+            [[${table.humpName}]] [[${table.humpLowerName}]] = [[${table.humpLowerName}]]Service.get[[${table.humpName}]]ByID(id, getUserInfo(request).getTenantId());
+            model.addAttribute("[[${table.humpLowerName}]]", [[${table.humpLowerName}]]);
+        }
+        return "[[${table.humpLowerName}]]Edit";
+    }
+
+    @RequestMapping(value = "/query")
+    @ResponseBody
+    public Result query[[${table.humpName}]](HttpServletRequest request, Page page, [[${table.humpName}]]Query query) {
+        UserInfo userInfo = getUserInfo(request);
+        query.setTenantId(userInfo.getTenantId());
+        query.setWarehouseNo(userInfo.getWarehouseNo());
+        page = [[${table.humpLowerName}]]Service.findPage(page, query);
+        return ResultUtil.getSuccessResult(page);
+    }
+
+    @RequestMapping(value = "/inst")
+    @ResponseBody
+    public Result inst[[${table.humpName}]](HttpServletRequest request, @Valid [[${table.humpName}]]AddVO [[${table.humpLowerName}]]VO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.getIllegalArgumentResult("数据校验失败");
+        }
+        try {
+            [[${table.humpName}]] [[${table.humpLowerName}]] = new [[${table.humpName}]]();
+            [[${table.humpLowerName}]] = get[[${table.humpName}]]([[${table.humpLowerName}]], [[${table.humpLowerName}]]VO, getUserInfo(request));
+            [[${table.humpLowerName}]] = [[${table.humpLowerName}]]Service.insert[[${table.humpName}]]([[${table.humpLowerName}]]);
+            return ResultUtil.getSuccessResult([[${table.humpLowerName}]]);
+        } catch (IllegalArgumentException e) {
+            return ResultUtil.getIllegalArgumentResult(e.getMessage());
+        } catch (BizException e) {
+            return ResultUtil.getBusinessExceptionResult(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e);
+            return ResultUtil.getExceptionResult("系统异常");
+        }
+    }
+
+    @RequestMapping(value = "/upt")
+    @ResponseBody
+    public Result upt[[${table.humpName}]](HttpServletRequest request, @Valid [[${table.humpName}]]EditVO [[${table.humpLowerName}]]VO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResultUtil.getIllegalArgumentResult("数据校验失败");
+        }
+        if ([[${table.humpLowerName}]]VO == null) {
+            return ResultUtil.getIllegalArgumentResult("参数异常");
+        }
+        try {
+            [[${table.humpName}]] [[${table.humpLowerName}]] = new [[${table.humpName}]]();
+            [[${table.humpLowerName}]] = get[[${table.humpName}]]([[${table.humpLowerName}]], [[${table.humpLowerName}]]VO, getUserInfo(request));
+            [[${table.humpLowerName}]]Service.update[[${table.humpName}]]([[${table.humpLowerName}]]);
+            return ResultUtil.getSuccessResult();
+        } catch (IllegalArgumentException e) {
+            return ResultUtil.getIllegalArgumentResult(e.getMessage());
+        } catch (BusinessException e) {
+            return ResultUtil.getBusinessExceptionResult(e.getMessage());
+        } catch (Exception e) {
+            logger.error("更新信息异常！", e);
+            return ResultUtil.getExceptionResult("系统异常");
+        }
+    }
+
+    @RequestMapping(value = "/del")
+    @ResponseBody
+    public Result del[[${table.humpName}]](HttpServletRequest request, Long id) {
+        try {
+            [[${table.humpLowerName}]]Service.del[[${table.humpName}]]ByID(id, getUserInfo(request).getTenantId());
+            return ResultUtil.getSuccessResult();
+        } catch (IllegalArgumentException e) {
+            return ResultUtil.getIllegalArgumentResult(e.getMessage());
+        } catch (BizException e) {
+            return ResultUtil.getBusinessExceptionResult(e.getMessage());
+        } catch (Exception e) {
+            logger.error("删除信息异常！", e);
+            return ResultUtil.getExceptionResult("系统异常");
+        }
+    }
+
+    private [[${table.humpName}]] get[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]], [[${table.humpName}]]EditVO [[${table.humpLowerName}]]VO, UserInfo userInfo) {
+        BeanUtils.copyProperties([[${table.humpLowerName}]]VO, [[${table.humpLowerName}]]);
+        [[${table.humpLowerName}]].setTenantId(userInfo.getTenantId());
+        [[${table.humpLowerName}]].setWarehouseNo(userInfo.getWarehouseNo());
+        [[${table.humpLowerName}]].setCreateUser(userInfo.getPin());
+        [[${table.humpLowerName}]].setUpdateUser(userInfo.getPin());
+        return [[${table.humpLowerName}]];
+    }
+
+    private [[${table.humpName}]] get[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]], [[${table.humpName}]]AddVO [[${table.humpLowerName}]]VO, UserInfo userInfo) {
+        BeanUtils.copyProperties([[${table.humpLowerName}]]VO, [[${table.humpLowerName}]]);
+        [[${table.humpLowerName}]].setTenantId(userInfo.getTenantId());
+        [[${table.humpLowerName}]].setWarehouseNo(userInfo.getWarehouseNo());
+        [[${table.humpLowerName}]].setCreateUser(userInfo.getPin());
+        [[${table.humpLowerName}]].setUpdateUser(userInfo.getPin());
+        return [[${table.humpLowerName}]];
+    }
+}

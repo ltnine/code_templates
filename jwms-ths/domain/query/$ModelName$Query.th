@@ -1,0 +1,18 @@
+package [[${basePackageName}]].query;
+
+import [[${basePackageName}]].base.BaseBizQuery;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class [[${table.humpName}]]Query extends BaseBizQuery {
+<th:block th:each="item:${table.catColumnBOS}" th:if="${item.mappable}">
+    <th:block th:text="|    private ${item.javaDataType} ${item.humpLowerName};|"></th:block></th:block>
+<th:block th:each="item:${table.catColumnBOS}" th:if="${item.startEndCondition}">
+    <th:block th:text="|    private ${item.javaDataType} ${item.humpLowerName}Start;|"></th:block>
+    <th:block th:text="|    private ${item.javaDataType} ${item.humpLowerName}End;|"></th:block></th:block>
+}

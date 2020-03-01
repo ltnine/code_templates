@@ -1,0 +1,22 @@
+package [[${basePackageName}]].service;
+
+import [[${basePackageName}]].entity.[[${table.humpName}]];
+import [[${basePackageName}]].query.[[${table.humpName}]]Query;
+import com.jd.jcloud.wms.domain.common.Page;
+import com.jd.jcloud.wms.domain.exception.BizException;
+
+public interface [[${table.humpName}]]Service {
+
+    String echo(String message);
+
+    [[${table.humpName}]] insert[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]) throws BizException;
+
+    void del[[${table.humpName}]]ByID(Long id, String tenantId) throws BizException;
+
+    [[${table.humpName}]] update[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]) throws BizException;
+
+    Page findPage(Page page, [[${table.humpName}]]Query conditions);
+
+    [[${table.humpName}]] get[[${table.humpName}]]ByID(Long id, String tenantId);
+
+}

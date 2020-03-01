@@ -1,0 +1,107 @@
+#set($layout = "layout/null.vm")
+<div th:id="|formQuery${table.humpName}Tab|" class="tab">
+</div>
+<div>
+    <div th:id="|formQuery${table.humpName}|" class="mod_form">
+        <ul class="mod_ul mod_count_4 mod_ul_bg"><span th:remove="tag" th:each="item:${table.catColumnBOS}" th:if="${item.mappable && item.humpLowerName != 'id'}">
+            <li>
+                <span class="mod_span">[[${item.chsName}]]：</span>
+                <span class="input">
+                    <input class="mod_input" th:id="${item.humpLowerName}" th:name="${item.humpLowerName}" placeholder=""/>
+                </span>
+            </li></span>
+        </ul>
+        <div class="btn-wrapper">
+            <a href="javascript:" class="mod_btn" th:id="|query${table.humpName}|">查询</a>
+        </div>
+    </div>
+    <hr>
+    <div class="block">
+        <div class="btn-wrapper">
+            <a href="javascript:" class="btn-line" th:id="|add${table.humpName}|">新建</a>
+        </div>
+        <div class="pager" th:id="|${table.humpLowerName}Table_pager_up|">
+            <div class="right">
+            <span class="page-num">
+                <div th:id="|${table.humpLowerName}Table_pager_nav_up|">
+                    <a href="javascript:" class="prev"><<</a>
+                    <a href="javascript:" class="num selected"> 1</a>
+                    <a href="javascript:" class="num">2</a>
+                    <a href="javascript:" class="num">3</a>
+                    <a href="javascript:" class="num">4</a>
+                    <a href="javascript:" class="next">>></a>
+                </div>
+            </span>
+                <span class="addition">
+                <span class="page-amount">共<i th:id="|${table.humpLowerName}Table_pager_count_up|">8</i>页</span>
+                <span class="num-input"> 到<span><input type="text" th:id="|${table.humpLowerName}Table_pager_goto_up|"
+                                                       th:table_pager_goto="|#${table.humpLowerName}Table_pager_goto_up|"/></span>页</span>
+                <span><a href="javascript:" class="goTo" th:id="|${table.humpLowerName}Table_pager_goto_btn_up|"
+                         th:table_pager_goto="|#${table.humpLowerName}Table_pager_goto_up|"> 确定</a></span></span>
+            </div>
+        </div>
+        <table class="index" th:id="|${table.humpLowerName}Table|"
+               th:table_pager_resize_trigger="|#${table.humpLowerName}Table_pager_size|"
+               th:table_pager_count="|#${table.humpLowerName}Table_pager_count,#${table.humpLowerName}Table_pager_count_up|"
+               th:table_pager_pageIndex="|#${table.humpLowerName}Table_pager_goto,#${table.humpLowerName}Table_pager_goto_up|"
+               th:table_pager_nav="|#${table.humpLowerName}Table_pager_nav,#${table.humpLowerName}Table_pager_nav_up|"
+               th:table_pager_goto_trigger="|#${table.humpLowerName}Table_pager_goto_btn,#${table.humpLowerName}Table_pager_goto_btn_up|"
+               th:table_total_num="|#${table.humpLowerName}Table_total_num|">
+            <thead>
+            <tr>
+                <th class="seqth" table_sort="__rowIndex1__ desc">
+                </th><th:block th:each="item:${table.catColumnBOS}" th:remove="tag" th:if="${item.mappable && item.humpLowerName != 'id'}">
+                <th class="sortable" th:table_sort="|${item.humpLowerName} desc|">
+                    [[${item.chsName}]]
+                </th></th:block>
+                <th class="opera"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    @{__rowIndex1__}
+                </td><th:block th:each="item:${table.catColumnBOS}" th:remove="tag" th:if="${item.mappable}">
+                <td>@{[[${item.humpLowerName}]]}</td></th:block>
+                <td class="opera">
+                    <div>
+                        <a th:href="|javascript:openEdit${table.humpName}Page(@{id})|" class="edit" title="编辑"><i></i></a>
+                        <a th:href="|javascript:delete${table.humpName}(@{id})|" class="delete" title="删除"> <i></i></a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pager" th:id="|${table.humpLowerName}Table_pager|">
+            <div class="addition">
+            <span>每页显示<select th:id="|${table.humpLowerName}Table_pager_size|">
+                <option selected>10</option>
+                <option>20</option>
+                <option>30</option>
+                <option>50</option>
+                <option>100</option>
+            </select>条 </span>
+                <span th:id="|${table.humpLowerName}Table_total_num|"></span>
+            </div>
+            <div class="right">
+                <span class="page-num">
+                    <div th:id="|${table.humpLowerName}Table_pager_nav|">
+                        <a href="javascript:" class="prev"><<</a>
+                        <a href="javascript:" class="num selected"> 1</a>
+                        <a href="javascript:" class="num">2</a>
+                        <a href="javascript:" class="num">3</a>
+                        <a href="javascript:" class="num">4</a>
+                        <a href="javascript:" class="next">>></a>
+                    </div>
+                </span>
+                <span class="addition">
+                <span class="page-amount">共<i th:id="|${table.humpLowerName}Table_pager_count|">8</i>页</span>
+                <span class="num-input"> 到<span><input type="text" th:id="|${table.humpLowerName}Table_pager_goto|"
+                                                       th:table_pager_goto="|#${table.humpLowerName}Table_pager_goto|"/></span>页</span>
+                <span><a href="javascript:" class="goTo" th:id="|${table.humpLowerName}Table_pager_goto_btn|"
+                         th:table_pager_goto="|#${table.humpLowerName}Table_pager_goto|"> 确定</a></span></span>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="|#springUrl()/static/script/${table.humpLowerName}List.js|"></script>

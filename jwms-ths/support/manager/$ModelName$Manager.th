@@ -1,0 +1,18 @@
+package [[${basePackageName}]].manager;
+
+import [[${basePackageName}]].entity.[[${table.humpName}]];
+import [[${basePackageName}]].query.[[${table.humpName}]]Query;
+import com.jd.jcloud.wms.domain.common.Page;
+
+public interface [[${table.humpName}]]Manager {
+
+    [[${table.humpName}]] insert[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]);
+
+    void del[[${table.humpName}]](Long id, String tenantId);
+
+    [[${table.humpName}]] update[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]);
+
+    Page find[[${table.humpName}]](Page page, [[${table.humpName}]]Query conditions);
+
+    [[${table.humpName}]] get[[${table.humpName}]](Long id, String tenantId);
+}

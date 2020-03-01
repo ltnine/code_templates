@@ -1,0 +1,17 @@
+package [[${basePackageName}]].vo;
+
+import [[${basePackageName}]].base.BaseBizVO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class [[${table.humpName}]]AddVO extends BaseBizVO {
+
+<th:block th:each="item:${table.catColumnBOS}" th:if="${item.addedvo}">
+    <th:block th:text="|    private ${item.javaDataType} ${item.humpLowerName};|"></th:block></th:block>
+}

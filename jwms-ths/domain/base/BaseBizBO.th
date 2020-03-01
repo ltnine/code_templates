@@ -1,0 +1,4 @@
+package [[${basePackageName}]].base;
+
+public class BaseBizBO {
+}

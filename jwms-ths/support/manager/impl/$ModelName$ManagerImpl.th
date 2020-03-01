@@ -1,0 +1,62 @@
+package [[${basePackageName}]].manager.impl;
+
+import [[${basePackageName}]].dao.[[${table.humpName}]]Dao;
+import [[${basePackageName}]].entity.[[${table.humpName}]];
+import [[${basePackageName}]].manager.[[${table.humpName}]]Manager;
+import [[${basePackageName}]].query.[[${table.humpName}]]Query;
+import com.jd.jcloud.wms.domain.common.Page;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+
+@Component
+public class [[${table.humpName}]]ManagerImpl implements [[${table.humpName}]]Manager {
+
+    private static final Logger log = LogManager.getLogger([[${table.humpName}]]ManagerImpl.class);
+
+    @Resource
+    private [[${table.humpName}]]Dao [[${table.humpLowerName}]]Dao;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public [[${table.humpName}]] insert[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]) {
+        [[${table.humpLowerName}]]Dao.insert([[${table.humpLowerName}]]);
+        return [[${table.humpLowerName}]];
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void del[[${table.humpName}]](Long id, String tenantId) {
+        [[${table.humpName}]] [[${table.humpLowerName}]] = [[${table.humpLowerName}]]Dao.getByID(id, tenantId);
+        if ([[${table.humpLowerName}]] != null) {
+            [[${table.humpLowerName}]]Dao.delByID([[${table.humpLowerName}]].getId(), [[${table.humpLowerName}]].getTenantId());
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public [[${table.humpName}]] update[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]) {
+        if ([[${table.humpLowerName}]].getId() == null) {
+            throw new IllegalArgumentException("参数为空错误");
+        }
+        [[${table.humpLowerName}]]Dao.update([[${table.humpLowerName}]]);
+        return [[${table.humpLowerName}]];
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page find[[${table.humpName}]](Page page, [[${table.humpName}]]Query conditions) {
+        page.setRows([[${table.humpLowerName}]]Dao.findPage(page, conditions));
+        return page;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public [[${table.humpName}]] get[[${table.humpName}]](Long id, String tenantId) {
+        return [[${table.humpLowerName}]]Dao.getByID(id, tenantId);
+    }
+
+}

@@ -1,0 +1,23 @@
+#set($layout = "layout/null.vm")
+#set($title = "新增[[${table.tableComment}]]")
+
+<form th:id="|formAdd${table.humpName}|">
+    <div class="m-edit-div">
+        <div class="info-content">
+            <ul class="cl w50"><span th:remove="tag" th:each="item:${table.catColumnBOS}" th:if="${item.addedvo}">
+                <li>
+                    <span class="con-p1">[[${item.chsName}]]：</span>
+                    <span class="input"><input type="text" th:id="${item.humpLowerName}" th:name="${item.humpLowerName}"
+                        th:value="'$!{' + ${table.humpLowerName} + '.' + ${item.humpLowerName} + '}'"/>
+                    </span>
+                    <span class="validate-tip" th:id="|tip${item.humpName}|"></span>
+                </li></span>
+            </ul>
+        </div>
+    </div>
+    <div class="bottom-div">
+        <a th:id="|add${table.humpName}Btn|" th:name="|add${table.humpName}Btn|" href="javascript:void(0)"
+           class="btn-default btn-next">保存</a>
+    </div>
+</form>
+<script th:src="|#springUrl()/static/script/${table.humpLowerName}Add.js|"></script>

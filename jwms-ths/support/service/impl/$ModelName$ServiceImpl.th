@@ -1,0 +1,54 @@
+package [[${basePackageName}]].service.impl;
+
+import [[${basePackageName}]].entity.[[${table.humpName}]];
+import [[${basePackageName}]].manager.[[${table.humpName}]]Manager;
+import [[${basePackageName}]].query.[[${table.humpName}]]Query;
+import [[${basePackageName}]].service.[[${table.humpName}]]Service;
+import com.jd.jcloud.wms.domain.common.Page;
+import com.jd.jcloud.wms.domain.exception.BizException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+
+@Component
+public class [[${table.humpName}]]ServiceImpl implements [[${table.humpName}]]Service {
+
+    private static final Logger log = LogManager.getLogger([[${table.humpName}]]ServiceImpl.class);
+
+    @Resource
+    private [[${table.humpName}]]Manager [[${table.humpLowerName}]]Manager;
+
+    @Override
+    public String echo(String message) {
+        return "You said: " + message;
+    }
+
+    @Override
+    public [[${table.humpName}]] get[[${table.humpName}]]ByID(Long id, String tenantId) {
+        return [[${table.humpLowerName}]]Manager.get[[${table.humpName}]](id, tenantId);
+    }
+
+    @Override
+    public [[${table.humpName}]] insert[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]) throws BizException {
+        [[${table.humpLowerName}]]Manager.insert[[${table.humpName}]]([[${table.humpLowerName}]]);
+        return [[${table.humpLowerName}]];
+    }
+
+    @Override
+    public [[${table.humpName}]] update[[${table.humpName}]]([[${table.humpName}]] [[${table.humpLowerName}]]) throws BizException {
+        [[${table.humpLowerName}]]Manager.update[[${table.humpName}]]([[${table.humpLowerName}]]);
+        return [[${table.humpLowerName}]];
+    }
+
+    @Override
+    public void del[[${table.humpName}]]ByID(Long id, String tenantId) throws BizException {
+        [[${table.humpLowerName}]]Manager.del[[${table.humpName}]](id, tenantId);
+    }
+
+    @Override
+    public Page findPage(Page page, [[${table.humpName}]]Query conditions) {
+        return [[${table.humpLowerName}]]Manager.find[[${table.humpName}]](page, conditions);
+    }
+}

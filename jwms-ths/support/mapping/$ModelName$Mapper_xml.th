@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper th:namespace="|${basePackageName}.dao.${table.humpName}Dao|">
+    <sql id="base_select_cloumn">
+        <span th:remove="tag"
+            th:each="item, itemStat : ${table.catColumnBOS}"><span
+                th:remove="tag" th:if="${item.mappable}" th:text="${itemStat.last}?${item.columnName}:${item.columnName}+','"></span></span>
+    </sql>
+
+    <select id="getByID" th:resultType="|${basePackageName}.entity.${table.humpName}|">
+        select
+        <include refid="base_select_cloumn"/>
+        from [[${table.tableName}]]
+        where is_delete = 0
+        and id = #{id}
+        <if test="tenantId != null">
+            and tenant_id = #{tenantId}
+        </if>
+    </select>
+
+    <delete id="delByID">
+        update [[${table.tableName}]] set is_delete = 1
+        where is_delete = 0
+        and id = #{id}
+        <if test="tenantId != null">
+            and tenant_id = #{tenantId}
+        </if>
+    </delete>
+
+    <select id="findPage" th:resultType="|${basePackageName}.entity.${table.humpName}|"
+            th:parameterType="|${basePackageName}.query.${table.humpName}Query|">
+        select
+        <include refid="base_select_cloumn"/>
+        from [[${table.tableName}]]
+        where is_delete = 0
+        <th:block th:each="item:${table.catColumnBOS}" th:if="${item.mappable}">
+        <span th:remove="tag" th:utext="${item.queryEqClause}"></span><span th:remove="tag" th:if="${item.startEndCondition}">
+        <span th:remove="tag" th:utext="${item.querySClause}"></span>
+        <span th:remove="tag" th:utext="${item.queryEClause}"></span></span></th:block>
+    </select>
+
+    <insert id="insert" th:parameterType="|${basePackageName}.entity.${table.humpName}|"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into [[${table.tableName}]]
+        <trim prefix="(" suffix=")" suffixOverrides=","><th:block
+            th:each="item:${table.catColumnBOS}" th:remove="tag" th:if="${item.inserted}">
+            <span th:remove="tag" th:text="|${item.columnName},|"></span></th:block>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=","><th:block
+            th:each="item:${table.catColumnBOS}" th:remove="tag" th:if="${item.inserted}">
+            <span th:remove="tag" th:text="|${item.insertValue},|"></span></th:block>
+        </trim>
+    </insert>
+
+    <update id="update" th:parameterType="|${basePackageName}.entity.${table.humpName}|">
+        update [[${table.tableName}]] set
+        <trim suffix="" suffixOverrides=","><th:block
+            th:each="item:${table.catColumnBOS}" th:remove="tag" th:if="${item.updated}">
+            [[${item.columnName}]] = [[${item.updateValue}]],</th:block>
+        </trim>
+        <where>is_delete = 0
+            and id = #{id}
+            <if test="tenantId != null">
+                and tenant_id = #{tenantId}
+            </if>
+        </where>
+    </update>
+
+</mapper>

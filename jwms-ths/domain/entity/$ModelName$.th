@@ -1,0 +1,19 @@
+package [[${basePackageName}]].entity;
+
+import com.jd.jcloud.wms.domain.entity.BizEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class [[${table.humpName}]] extends BizEntity implements Serializable {
+<th:block th:each="item:${table.catColumnBOS}" th:if="${item.mappable}">
+    /**
+     * [[${item.columnComment}]]
+     */
+    <th:block th:text="|    private ${item.javaDataType} ${item.humpLowerName};|"></th:block></th:block>
+}
